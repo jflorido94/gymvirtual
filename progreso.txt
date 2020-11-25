@@ -1,6 +1,6 @@
 utilizar Limit 10,10 para la paginacion
 
-utilizar begintransation commit y rollback en las funciones de los modelos
+utilizar begintransation commit y rollback en las funciones de los modelos agenda y reservas
 
 
 modificar los modelos segun tengan sentido, o los joins que tengan que mostrar

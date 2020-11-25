@@ -1,11 +1,12 @@
 <?php 
 
-class usuariosModelo extends modelo
+class usuariosModel extends Model
 {
   
   function __construct()
   {
     parent::__construct();
+    $this->table = "users";
   }
 
   public function select()
@@ -13,9 +14,9 @@ class usuariosModelo extends modelo
     $resultado = [];
 
     try {
-      $sql = "SELECT * FROM 'users'";
+      $sql = "SELECT * FROM $this->table";
 
-      $query = $this->db->connect()->prepare($sql);
+      $query = $this->db->getConnection()->prepare($sql);
       $query->execute();
 
       $resultado["datos"] = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -35,10 +36,10 @@ class usuariosModelo extends modelo
     $resultado = [];
 
     try {
-      $sql = "INSERT INTO users ( 'nif', 'name', 'surname' , 'image', 'login', 'password' , 'email', 'phone', 'address' , 'rol_id') 
+      $sql = "INSERT INTO $this->table ( 'nif', 'name', 'surname' , 'image', 'login', 'password' , 'email', 'phone', 'address' , 'rol_id') 
                              VALUES (:nif, :nombre, :apellido, :imagen, :nick, :contrasena, :email , :telefono, :direccion, :rol)";
 
-      $query = $this->db->connect()->prepare($sql);
+      $query = $this->db->getConnection()->prepare($sql);
       $query->execute([
         ':nif' => $a,
         ':nombre' => $a,
@@ -68,11 +69,11 @@ public function update($a)
   $resultado = [];
 
     try {
-      $sql = "UPDATE 'users' SET 'nif' = :nif, 'name' = :nombre, 'surname' = :apellido, 'image' = :imagen, 'login' = :nick, 
+      $sql = "UPDATE $this->table SET 'nif' = :nif, 'name' = :nombre, 'surname' = :apellido, 'image' = :imagen, 'login' = :nick, 
                           'password' = :contrasena, 'email' = :email, 'phone' = :telefono, 'address' = :direccion. 'rol_id' = :rol
-              WHERE 'users'.'id' = :id";
+              WHERE $this->table.'id' = :id";
 
-      $query = $this->db->connect()->prepare($sql);
+      $query = $this->db->getConnection()->prepare($sql);
       $query->execute([
         ':nif' => $a,
         ':nombre' => $a,
@@ -103,9 +104,9 @@ public function delete($a)
   $resultado = [];
 
     try {
-      $sql = "DELETE from 'users' where id = :id";
+      $sql = "DELETE from $this->table where id = :id";
 
-      $query = $this->db->connect()->prepare($sql);
+      $query = $this->db->getConnection()->prepare($sql);
       $query->execute([
         ':id' => $a
       ]);

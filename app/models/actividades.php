@@ -1,11 +1,12 @@
 <?php
 
-class actividadesModelo extends modelo
+class actividadesModel extends Model
 {
 
   function __construct()
   {
     parent::__construct();
+    $this->table = "activity";
   }
 
   public function select()
@@ -13,9 +14,9 @@ class actividadesModelo extends modelo
     $resultado = [];
 
     try {
-      $sql = "SELECT * FROM 'activity'";
+      $sql = "SELECT * FROM $this->table";
 
-      $query = $this->db->connect()->prepare($sql);
+      $query = $this->db->getConnection()->prepare($sql);
       $query->execute();
 
       $resultado["datos"] = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -35,10 +36,10 @@ class actividadesModelo extends modelo
     $resultado = [];
 
     try {
-      $sql = "INSERT INTO activity ( 'name', 'description', 'capacity') 
+      $sql = "INSERT INTO $this->table ( 'name', 'description', 'capacity') 
                              VALUES (:nombre, :descripcion, :capacidad)";
 
-      $query = $this->db->connect()->prepare($sql);
+      $query = $this->db->getConnection()->prepare($sql);
       $query->execute([
         ':nombre' => $a,
         ':descripcion' => $a,
@@ -61,10 +62,10 @@ public function update($a)
   $resultado = [];
 
     try {
-      $sql = "UPDATE 'activity' SET 'name' = :nombre, 'description' = :descripcion, 'capacity' = :capacidad 
-              WHERE 'activity'.'id' = :id";
+      $sql = "UPDATE $this->table SET 'name' = :nombre, 'description' = :descripcion, 'capacity' = :capacidad 
+              WHERE $this->table.'id' = :id";
 
-      $query = $this->db->connect()->prepare($sql);
+      $query = $this->db->getConnection()->prepare($sql);
       $query->execute([
         ':nombre' => $a,
         ':descripcion' => $a,
@@ -88,9 +89,9 @@ public function delete($a)
   $resultado = [];
 
     try {
-      $sql = "DELETE from 'activity' where id = :id";
+      $sql = "DELETE from $this->table where id = :id";
 
-      $query = $this->db->connect()->prepare($sql);
+      $query = $this->db->getConnection()->prepare($sql);
       $query->execute([
         ':id' => $a
       ]);

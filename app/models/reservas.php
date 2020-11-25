@@ -1,11 +1,12 @@
 <?php 
 
-class reservasModelo extends modelo
+class reservasModel extends Model
 {
   
   function __construct()
   {
     parent::__construct();
+    $this->table = "->getConnection()bookings";
   }
 
   public function select()
@@ -13,9 +14,9 @@ class reservasModelo extends modelo
     $resultado = [];
 
     try {
-      $sql = "SELECT * FROM 'bookings'";
+      $sql = "SELECT * FROM $this->table";
 
-      $query = $this->db->connect()->prepare($sql);
+      $query = $this->db->getConnection()->prepare($sql);
       $query->execute();
 
       $resultado["datos"] = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -35,10 +36,10 @@ class reservasModelo extends modelo
     $resultado = [];
 
     try {
-      $sql = "INSERT INTO bookings ( 'users_id', 'activity_date', 'booking_date' , 'calendar_id') 
+      $sql = "INSERT INTO $this->table ( 'users_id', 'activity_date', 'booking_date' , 'calendar_id') 
                              VALUES (:usuario, :fecha_acitividad, :fecha_actual, :calendario)";
 
-      $query = $this->db->connect()->prepare($sql);
+      $query = $this->db->getConnection()->prepare($sql);
       $query->execute([
         ':usuario' => $a,
         ':fecha_acitividad' => $a,
@@ -62,11 +63,11 @@ public function update($a)
   $resultado = [];
 
     try {
-      $sql = "UPDATE 'bookings' SET 'users_id' = :usuario, 'activity_date' = :descripcion, 
+      $sql = "UPDATE $this->table SET 'users_id' = :usuario, 'activity_date' = :descripcion, 
                                   'booking_date' = :capacidad, 'calendar_id' = :calendario
-              WHERE 'bookings'.'id' = :id";
+              WHERE $this->table.'id' = :id";
 
-      $query = $this->db->connect()->prepare($sql);
+      $query = $this->db->getConnection()->prepare($sql);
       $query->execute([
         ':usuario' => $a,
         ':fecha_acitividad' => $a,
@@ -91,9 +92,9 @@ public function delete($a)
   $resultado = [];
 
     try {
-      $sql = "DELETE from 'bookings' where id = :id";
+      $sql = "DELETE from $this->table where id = :id";
 
-      $query = $this->db->connect()->prepare($sql);
+      $query = $this->db->getConnection()->prepare($sql);
       $query->execute([
         ':id' => $a
       ]);

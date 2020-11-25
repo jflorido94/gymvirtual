@@ -1,6 +1,6 @@
 <?php 
 
-class controlador
+class Controlador
 {
   protected $vista;
   protected $modelo;
@@ -17,7 +17,7 @@ class controlador
     if (file_exists($ruta)) {
       require $ruta;
 
-      $nombre.= 'Modelo' ;
+      $nombre.= 'Model' ;
       $this->modelo = new $nombre;
     }
   }

@@ -10,7 +10,7 @@
   <?php 
     include 'includes/header.php';
   //   if (!UserSession::existCurrentUser()) {
-  //     header("location: ". constant('URL')."sesion");
+  //     header("location: ". URL."sesion");
   //   }elseif (UserSession::getCurrentUserAdmin()) {
   //     echo "Administrador";
   //   }else {

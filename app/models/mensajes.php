@@ -1,21 +1,21 @@
 <?php 
 
-class mensajesModelo extends modelo
+class mensajesModel extends Model
 {
   
   function __construct()
   {
     parent::__construct();
+    parent::$table = "messages";
   }
 
   public function select()
   {
-    $resultado = [];
-
+    
     try {
-      $sql = "SELECT * FROM 'messages'";
+      $sql = "SELECT * FROM $this->table";
 
-      $query = $this->db->connect()->prepare($sql);
+      $query = $this->db->getConnection()->prepare($sql);
       $query->execute();
 
       $resultado["datos"] = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -32,13 +32,13 @@ class mensajesModelo extends modelo
 
   public function insert($a)
   {
-    $resultado = [];
+    
 
     try {
-      $sql = "INSERT INTO messages ( 'from_users_id', 'to_users_id', 'message')
+      $sql = "INSERT INTO $this->table ( 'from_users_id', 'to_users_id', 'message')
                              VALUES (:de, :para, :mensaje)";
 
-      $query = $this->db->connect()->prepare($sql);
+      $query = $this->db->getConnection()->prepare($sql);
       $query->execute([
         ':de' => $a,
         ':para' => $a,
@@ -58,41 +58,18 @@ class mensajesModelo extends modelo
 
 public function update($a)
 {
-  $resultado = [];
+ 
 
     try {
-      $sql = "UPDATE 'messages' SET 'from_users_id' = :de, 'to_users_id' = :para, 'message' = :mensaje
-              WHERE 'messages'.'id' = :id";
+      $sql = "UPDATE $this->table' SET 'from_users_id' = :de, 'to_users_id' = :para, 'message' = :mensaje
+              WHERE $this->table.'id' = :id";
 
-      $query = $this->db->connect()->prepare($sql);
+      $query = $this->db->getConnection()->prepare($sql);
       $query->execute([
         ':de' => $a,
         ':para' => $a,
         ':message' => $a,
         ':id' => $a,
-      ]);
-
-      $resultado["correcto"] = true;
-
-    } catch (PDOException $ex) {
-      $resultado["datos"] = $ex->getMessage();
-      $resultado["correcto"] = false;
-
-    } finally {
-      return $resultado;
-    }
-}
-
-public function delete($a)
-{
-  $resultado = [];
-
-    try {
-      $sql = "DELETE from 'messages' where id = :id";
-
-      $query = $this->db->connect()->prepare($sql);
-      $query->execute([
-        ':id' => $a
       ]);
 
       $resultado["correcto"] = true;

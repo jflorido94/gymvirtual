@@ -1,11 +1,12 @@
 <?php 
 
-class calendarioModelo extends modelo
+class calendarioModel extends Model
 {
   
   function __construct()
   {
     parent::__construct();
+    $this->table = "calendar";
   }
 
   public function select()
@@ -13,9 +14,9 @@ class calendarioModelo extends modelo
     $resultado = [];
 
     try {
-      $sql = "SELECT * FROM 'calendar'";
+      $sql = "SELECT * FROM $this->table";
 
-      $query = $this->db->connect()->prepare($sql);
+      $query = $this->db->getConnection()->prepare($sql);
       $query->execute();
 
       $resultado["datos"] = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -35,10 +36,10 @@ class calendarioModelo extends modelo
     $resultado = [];
 
     try {
-      $sql = "INSERT INTO calendar ( 'week_day', 'start_time', 'end_time' , 'activity_id', 'up_date', 'up_user_id' , 'down_date', 'down_user_id',) 
+      $sql = "INSERT INTO $this->table ( 'week_day', 'start_time', 'end_time' , 'activity_id', 'up_date', 'up_user_id' , 'down_date', 'down_user_id',) 
                              VALUES (:dia, :inicio, :final, :actividad, :creado, :creado_por, :eliminado , :eliminado_por)";
 
-      $query = $this->db->connect()->prepare($sql);
+      $query = $this->db->getConnection()->prepare($sql);
       $query->execute([
         ':dia' => $a,
         ':inicio' => $a,
@@ -66,11 +67,11 @@ public function update($a)
   $resultado = [];
 
     try {
-      $sql = "UPDATE 'calendar' SET 'week_day' = :dia, 'start_time' = :inicio, 'end_time' = :final, 'activity_id' = :actividad, 
+      $sql = "UPDATE $this->table SET 'week_day' = :dia, 'start_time' = :inicio, 'end_time' = :final, 'activity_id' = :actividad, 
                                     'up_date' = :creado, 'up_user_id' = :creado_por, 'down_date' = :eliminado, 'down_user_id' = :eliminado_por
-              WHERE 'calendar'.'id' = :id";
+              WHERE $this->table.'id' = :id";
 
-      $query = $this->db->connect()->prepare($sql);
+      $query = $this->db->getConnection()->prepare($sql);
       $query->execute([
         ':dia' => $a,
         ':inicio' => $a,
@@ -99,9 +100,9 @@ public function delete($a)
   $resultado = [];
 
     try {
-      $sql = "DELETE from 'calendar' where id = :id";
+      $sql = "DELETE from $this->table where id = :id";
 
-      $query = $this->db->connect()->prepare($sql);
+      $query = $this->db->getConnection()->prepare($sql);
       $query->execute([
         ':id' => $a
       ]);

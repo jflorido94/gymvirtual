@@ -1,6 +1,6 @@
 <?php 
 
-class main extends controlador
+class main extends Controlador
 {
   
   function __construct()
