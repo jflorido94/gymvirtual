@@ -1,6 +1,6 @@
 <?php 
 
-class errores extends Controlador
+class errores extends controlador
 {
   
   function __construct()

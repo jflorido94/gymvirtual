@@ -4,3 +4,8 @@ utilizar begintransation commit y rollback en las funciones de los modelos agend
 
 
 modificar los modelos segun tengan sentido, o los joins que tengan que mostrar
+
+
+UNIR SESION Y REGISTRO EN UNA VISTA?? (duda)
+
+Vista sesion copiar de ecommerce

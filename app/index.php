@@ -8,7 +8,7 @@
   require_once 'views/base.php';
   require_once 'models/base.php';
   require_once 'libs/app.php';
-  // require_once 'libs/UserSession.php';
+  require_once 'libs/UserSession.php';
   
   $app = new app();
 ?>

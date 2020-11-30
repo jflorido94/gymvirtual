@@ -9,17 +9,15 @@
 <body>
   <?php 
     include 'includes/header.php';
-  //   if (!UserSession::existCurrentUser()) {
-  //     header("location: ". URL."sesion");
-  //   }elseif (UserSession::getCurrentUserAdmin()) {
-  //     echo "Administrador";
-  //   }else {
-  //     echo "Hola Profesor del monton";
-  //   }
-  // ?>
+    if (!UserSession::existCurrentUser()) {
+      header("location: ". URL."usuarios/registro");
+    }elseif (UserSession::getCurrentUserAdmin()) {
+      echo "Administrador";
+    }else {
+      echo "Hola Profesor del monton";
+    }
+  ?>
 
-<span class="btn btn-success">Funciona</span>
-
-   <? include 'includes/footer.php'; ?>
+   <?php include 'includes/footer.php'; ?>
 </body>
 </html>

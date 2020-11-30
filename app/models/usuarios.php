@@ -11,7 +11,6 @@ class usuariosModel extends Model
 
   public function select()
   {
-    $resultado = [];
 
     try {
       $sql = "SELECT * FROM $this->table";
@@ -33,24 +32,22 @@ class usuariosModel extends Model
 
   public function insert($a)
   {
-    $resultado = [];
 
     try {
-      $sql = "INSERT INTO $this->table ( 'nif', 'name', 'surname' , 'image', 'login', 'password' , 'email', 'phone', 'address' , 'rol_id') 
-                             VALUES (:nif, :nombre, :apellido, :imagen, :nick, :contrasena, :email , :telefono, :direccion, :rol)";
+      $sql = "INSERT INTO `users`(`id`, `nif`, `name`, `surnames`, `image`, `login`, `password`, `email`, `phone`, `address`, `rol_id`)
+                         VALUES (NULL,:nif,:name,:surnames,NULL,:login,:password,:email,:phone,:address,:rol_id)";
 
       $query = $this->db->getConnection()->prepare($sql);
       $query->execute([
-        ':nif' => $a,
-        ':nombre' => $a,
-        ':apellido' => $a,
-        ':imagen' => $a,
-        ':nick' => $a,
-        ':contrasena' => $a,
-        ':email' => $a,
-        ':telefono' => $a,
-        ':direccion' => $a,
-        ':rol' => $a,
+        ':nif' => $a["dni"],
+        ':name' => $a["nombre"],
+        ':surnames' => $a["apellidos"],
+        ':login' => $a["usuario"],
+        ':password' => $a["password"],
+        ':email' => $a["email"],
+        ':phone' => $a["telefono"],
+        ':address' => $a["direccion"],
+        ':rol_id' => 1,
       ]);
 
       $resultado["correcto"] = true;
@@ -66,7 +63,6 @@ class usuariosModel extends Model
 
 public function update($a)
 {
-  $resultado = [];
 
     try {
       $sql = "UPDATE $this->table SET 'nif' = :nif, 'name' = :nombre, 'surname' = :apellido, 'image' = :imagen, 'login' = :nick, 
@@ -101,7 +97,6 @@ public function update($a)
 
 public function delete($a)
 {
-  $resultado = [];
 
     try {
       $sql = "DELETE from $this->table where id = :id";

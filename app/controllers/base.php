@@ -1,6 +1,6 @@
 <?php 
 
-class Controlador
+class controlador
 {
   protected $vista;
   protected $modelo;
