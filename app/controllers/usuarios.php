@@ -66,7 +66,7 @@ class usuarios extends controlador
         header("location:" . URL);
         
       } else {
-        $mensaje = ["Usuario o contraseña no validos.", "danger"];
+        $mensaje = [$bdusuario['datos'], "danger"];
         $this->vista->cargarvista('sesion');
       }
     } else {
@@ -74,7 +74,7 @@ class usuarios extends controlador
     }
   }
 
-  function salir()
+  function end()
   {
 
     UserSession::sessionClose();

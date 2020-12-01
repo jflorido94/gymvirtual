@@ -34,8 +34,8 @@ class usuariosModel extends Model
   {
 
     try {
-      $sql = "INSERT INTO `users`(`id`, `nif`, `name`, `surnames`, `image`, `login`, `password`, `email`, `phone`, `address`, `rol_id`)
-                         VALUES (NULL,:nif,:name,:surnames,NULL,:login,:password,:email,:phone,:address,:rol_id)";
+      $sql = "INSERT INTO `users`(`id`, `nif`, `name`, `surnames`, `image`, `login`, `password`, `email`, `phone`, `address`, `rol_id`,`accepted`)
+                         VALUES (NULL,:nif,:name,:surnames,NULL,:login,:password,:email,:phone,:address,:rol_id, :accepted)";
 
       $query = $this->db->getConnection()->prepare($sql);
       $query->execute([
@@ -47,7 +47,8 @@ class usuariosModel extends Model
         ':email' => $a["email"],
         ':phone' => $a["telefono"],
         ':address' => $a["direccion"],
-        ':rol_id' => 1,
+        ':rol_id' => 0,
+        ':accepted' => 1,
       ]);
 
       $resultado["correcto"] = true;
@@ -117,7 +118,35 @@ public function delete($a)
     }
 }
 
+public function iniciar($usuario, $contraseña)
+  {
+    try {
+      $resultado["correcto"]=false;
+      $resultado["datos"]=null;
+
+      $sql = "SELECT * from $this->table where `login`=:usuario and `password`=:pass";
+      $query = $this->db->getConnection()->prepare($sql);
+      $query->execute([
+        'usuario' => $usuario,
+        'pass' => $contraseña
+      ]);
+      if ($query->rowCount()==1) {
+        $resultado["datos"] = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($resultado["datos"]['0']["accepted"]!=1) {
+          throw new PDOException("Usuario no activo, contacte con el Administrador");
+        }else {
+          $resultado["correcto"] = true;
+        }
+      }else {
+        throw new PDOException("Usuario o contraseña incorrectos");
+      }
+      return $resultado;
+    } catch (PDOException $ex) {
+      $resultado["datos"] = $ex->getMessage();
+      return $resultado;
+    }
+  }
+
 }
-
-
 ?>

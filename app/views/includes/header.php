@@ -1,7 +1,7 @@
 <!-- ******Barra de navegacion superior******* -->
 
 <!--Navbar -->
-<nav class="mb-1 navbar navbar-expand-lg navbar-light bg-info">
+<!-- <nav class="mb-1 navbar navbar-expand-lg navbar-light bg-info">
   <a class="navbar-brand" href="#">GYM Virtual</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-555" aria-controls="navbarSupportedContent-555" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -37,9 +37,63 @@
       </li>
     </ul>
   </div>
-</nav>
+</nav> -->
 <!--/.Navbar -->
 
 
+
+<header class="section-header ">
+  <nav class="navbar navbar-main navbar-expand-lg navbar-light bg">
+    <div class="container">
+      <a class="navbar-brand" href=<?php echo (URL) ?>><img src="<?php echo(URL)?>assets/img/logo1.png"></a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarToggler">
+        <ul class="navbar-nav ml-auto mr-sm-2 mt-2 mt-lg-0">
+          <li class="nav-item mr-3">
+            <a class="nav-link" href=<?php echo (URL) ?>>Home</a>
+          </li>
+          <li class="nav-item mr-3">
+            <a class="nav-link" href="">Calendario</a>
+          </li>
+          <li class="nav-item mr-3">
+            <a class="nav-link" href="#">Reservas</a>
+          </li>
+          <li class="nav-item mr-3">
+            <a class="nav-link" href="#">Usuarios</a>
+          </li>
+          <li class="nav-item mr-3">
+            <a class="nav-link" href="#">Actividades</a>
+          </li>
+        </ul>
+
+        <?php if (UserSession::existCurrentUser()) { ?>
+
+          <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+                <img class="icon icon-md rounded-circle mr-2" src="<?php echo(URL)?>assets/img/pruebahombre.jpg"> <?php echo UserSession::getCurrentUser() ?>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Perfil</a>
+                <a class="dropdown-item" href="#">Account Settings</a>
+                <a class="dropdown-item" href="#">Mensajes</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="<?php echo (URL . "usuarios/end") ?>">Cerrar sesión</a>
+              </div>
+            </li>
+          </ul>
+        <?php }else { ?>
+          
+        <?php } ?>
+      </div>
+    </div>
+  </nav>
+</header>
+
+
 <!-- ******Inicio de la pagina web****** (se cierra en el footer) -->
-<div class="pagweb ">
+<div class="pagweb container">

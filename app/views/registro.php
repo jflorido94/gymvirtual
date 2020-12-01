@@ -85,61 +85,9 @@
             </div>
 
           </form> <!-- card-body end .// -->
-        <div class="card-footer text-center">¿Tienes una cuenta? <a href="">Inicia sesión</a></div>
+        <div class="card-footer text-center">¿Tienes una cuenta? <a href="<?php echo URL ?>usuarios/login">Inicia sesión</a></div>
       </div>
 
-
-
-
-
-
-
-
-
-
-      <!-- <form class="card" action="<?php echo constant('URL'); ?>registro/add" method="post">
-        <h2 class="card-header"> Registro </h2>
-        <div class="card-body">
-          <p class="alert alert-<?php echo $this->mensaje[1]; ?>"><?php echo $this->mensaje[0]; ?></p>
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Usuario</span>
-            </div>
-            <input class="form-control" type="text" name="usuario" required>
-          </div>
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Nombre</span>
-            </div>
-            <input class="form-control" type="text" name="nombre" required>
-          </div>
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Apellidos</span>
-            </div>
-            <input class="form-control" type="text" name="apellidos" required>
-          </div>
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text">e-Mail</span>
-            </div>
-            <input class="form-control" type="email" name="email" required>
-          </div>
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Contraseña</span>
-            </div>
-            <input class="form-control" type="password" name="password" required>
-          </div>
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Confirmar Contraseña</span>
-            </div>
-            <input class="form-control" type="password" name="passconfirm" required>
-          </div>
-          <p><input class="btn btn-success rounded-pill shadow-sm px-3" type="submit" value="Registrarse"></p>
-        </div>
-      </form> -->
     </div>
   </div>
 

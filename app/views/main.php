@@ -8,16 +8,16 @@
 </head>
 <body>
   <?php 
-    include 'includes/header.php';
     if (!UserSession::existCurrentUser()) {
-      header("location: ". URL."usuarios/registro");
-    }elseif (UserSession::getCurrentUserAdmin()) {
+      header("location:". URL."usuarios/login");
+    }
+    include 'includes/header.php';
+    
+    if (UserSession::getCurrentUserAdmin()) {
       echo "Administrador";
     }else {
       echo "Hola Profesor del monton";
-    }
-  ?>
-
-   <?php include 'includes/footer.php'; ?>
+    } 
+    include 'includes/footer.php'; ?>
 </body>
 </html>

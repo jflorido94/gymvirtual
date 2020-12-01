@@ -8,17 +8,20 @@ class UserSession {
   }
 
   static public function existCurrentUser(){
-    return isset($_SESSION['user']);
+    return isset($_SESSION['login']);
   }
 
   static public function setCurrentUser($user){
-    $_SESSION['user']=$user['Usuario'];
-    $_SESSION['userName']=$user['Nombre']." ".$user['Apellidos'];
-    $_SESSION['userAdmin']=$user['Admin'];
+    $_SESSION['id']=$user['id'];
+    $_SESSION['userName']=$user['name']." ".$user['surnames'];
+    $_SESSION['urlimg']=$user['image'];
+    $_SESSION['login']=$user['login'];
+    $_SESSION['email']=$user['email'];
+    $_SESSION['rol']=$user['rol_id'];
   }
   
   static public function getCurrentUser(){
-    return $_SESSION['user'];
+    return $_SESSION['login'];
   }
 
   static public function getCurrentUserName(){
@@ -26,8 +29,8 @@ class UserSession {
   }
 
   static public function getCurrentUserAdmin(){
-    if (isset($_SESSION['user'])) {
-      if($_SESSION['userAdmin']==1){
+    if (isset($_SESSION['login'])) {
+      if($_SESSION['rol']==1){
         return true;
       }else {
         return false;
@@ -37,6 +40,7 @@ class UserSession {
 
   static public function sessionClose(){
     session_unset();
+    session_destroy();
   }
 
 }
