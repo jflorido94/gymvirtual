@@ -8,5 +8,4 @@ modificar los modelos segun tengan sentido, o los joins que tengan que mostrar
 
 UNIR SESION Y REGISTRO EN UNA VISTA?? (duda)
 imagen de cada usuario (configuracion perfil)
-Links footer header
 

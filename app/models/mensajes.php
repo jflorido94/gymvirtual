@@ -1,38 +1,33 @@
-<?php 
+<?php
 
 class mensajesModel extends Model
 {
-  
+
   function __construct()
   {
     parent::__construct();
     parent::$table = "messages";
   }
 
-  public function select()
-  {
-    
-    try {
-      $sql = "SELECT * FROM $this->table";
-
-      $query = $this->db->getConnection()->prepare($sql);
-      $query->execute();
-
-      $resultado["datos"] = $query->fetchAll(PDO::FETCH_ASSOC);
-      $resultado["correcto"] = true;
-
-    } catch (PDOException $ex) {
-      $resultado["datos"] = $ex->getMessage();
-      $resultado["correcto"] = false;
-
-    } finally {
-      return $resultado;
-    }
-  }
-
+  /**
+   * Inserta un mensaje del usuario actual para un usuario
+   *
+   * @param Array $a
+   * @return Array 
+   * ["correcto"] → true si se recuperaron bien los datos
+   * 
+   * ["datos"]    → Array con los registros de la tabla
+   * 
+   * ["mensaje"]  → mensaje de error o de realizacion correcta
+   */
   public function insert($a)
   {
-    
+
+    $resultado = [
+      "correcto" => false,
+      "mensaje"  => "",
+      "datos"    => "",
+    ];
 
     try {
       $sql = "INSERT INTO $this->table ( 'from_users_id', 'to_users_id', 'message')
@@ -46,19 +41,34 @@ class mensajesModel extends Model
       ]);
 
       $resultado["correcto"] = true;
-
     } catch (PDOException $ex) {
-      $resultado["datos"] = $ex->getMessage();
+      $resultado["mensaje"] = $ex->getMessage();
       $resultado["correcto"] = false;
-
     } finally {
       return $resultado;
     }
   }
 
-public function update($a)
-{
- 
+  /**
+   * Edita un mensaje
+   *
+   * @param Array $a
+   * @return Array
+   * 
+   * ["correcto"] → true si se recuperaron bien los datos
+   * 
+   * ["datos"]    → Array con los registros de la tabla
+   * 
+   * ["mensaje"]  → mensaje de error o de realizacion correcta
+   */
+  public function update($a)
+  {
+
+    $resultado = [
+      "correcto" => false,
+      "mensaje"  => "",
+      "datos"    => "",
+    ];
 
     try {
       $sql = "UPDATE $this->table' SET 'from_users_id' = :de, 'to_users_id' = :para, 'message' = :mensaje
@@ -73,17 +83,11 @@ public function update($a)
       ]);
 
       $resultado["correcto"] = true;
-
     } catch (PDOException $ex) {
-      $resultado["datos"] = $ex->getMessage();
+      $resultado["mensaje"] = $ex->getMessage();
       $resultado["correcto"] = false;
-
     } finally {
       return $resultado;
     }
+  }
 }
-
-}
-
-
-?>

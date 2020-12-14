@@ -5,11 +5,7 @@ class usuarios extends controlador
 
   function __construct()
   {
-    if (UserSession::existCurrentUser()) {
-      header("location: " . URL);
-    }
     parent::__construct();
-    $this->vista->mensaje = ["", ""];
   }
 
   //---Registro--- 
@@ -17,33 +13,35 @@ class usuarios extends controlador
 
   public function registro()
   {
-
-    if (isset($_POST['submit'])) {
-      if ($_POST["passconfirm"] == $_POST["password"]) {
-        $nuevousuario = [
-          'nombre'     => $_POST['nombre'],
-          'apellidos'  => $_POST['apellidos'],
-          'dni'        => $_POST['dni'],
-          'telefono'   => $_POST['telefono'],
-          'email'      => $_POST['email'],
-          'direccion'  => $_POST['direccion'],
-          'usuario'    => $_POST['usuario'],
-          'password'   => sha1($_POST['password'])
-        ];
-        $resultado = $this->modelo->insert($nuevousuario);
-        if ($resultado['correcto']) {
-          $mensaje = ["Registro realizado correctamente, espere a que un administrador acepte su solicitud", "success"];
-        } else {
-          $mensaje = [$resultado['datos'], "danger"];
-        }
-      } else {
-        $mensaje = ["Registro no realizado, contraseñas no coincidentes", "danger"];
-      }
-      $this->vista->mensaje = $mensaje;
-
-      $this->vista->cargarvista('registro');
+    if (UserSession::existCurrentUser()) {
+      header("location: " . URL);
     } else {
-      $this->vista->cargarvista('registro');
+      if (isset($_POST['submit'])) {
+        if ($_POST["passconfirm"] == $_POST["password"]) {
+          $nuevousuario = [
+            'nombre'     => $_POST['nombre'],
+            'apellidos'  => $_POST['apellidos'],
+            'dni'        => $_POST['dni'],
+            'telefono'   => $_POST['telefono'],
+            'email'      => $_POST['email'],
+            'direccion'  => $_POST['direccion'],
+            'usuario'    => $_POST['usuario'],
+            'password'   => sha1($_POST['password'])
+          ];
+          $resultado = $this->modelo->insert($nuevousuario);
+          if ($resultado['correcto']) {
+            $this->vista->mensaje = ["Registro realizado correctamente, espere a que un administrador acepte su solicitud", "success"];
+          } else {
+            $this->vista->mensaje = [$resultado['mensaje'], "danger"];
+          }
+        } else {
+          $this->vista->mensaje = ["Registro no realizado, contraseñas no coincidentes", "danger"];
+        }
+
+        $this->vista->cargarvista('registro');
+      } else {
+        $this->vista->cargarvista('registro');
+      }
     }
   }
 
@@ -51,36 +49,100 @@ class usuarios extends controlador
 
   //---Sesion
 
-
   function login()
   {
-    if (isset($_POST['submit'])) {
-      $usuario = $_POST['usuario'];
-      $contraseña = sha1($_POST['password']);
+    if (UserSession::existCurrentUser()) {
+      header("location: " . URL);
+    } else {
+      if (isset($_POST['submit'])) {
+        $usuario = $_POST['usuario'];
+        $contraseña = sha1($_POST['password']);
 
-      $bdusuario = $this->modelo->iniciar($usuario, $contraseña);
+        $bdusuario = $this->modelo->iniciar($usuario, $contraseña);
 
-      if ($bdusuario['correcto']) {
-        $user = $bdusuario['datos']['0'];
-        UserSession::setCurrentUser($user);
-        header("location:" . URL);
-        
+        if ($bdusuario['correcto']) {
+          $user = $bdusuario['datos']['0'];
+          UserSession::setCurrentUser($user);
+          header("location:" . URL);
+        } else {
+          $this->vista->mensaje = [$bdusuario['mensaje'], "danger"];
+          $this->vista->cargarvista('sesion');
+        }
       } else {
-        $mensaje = [$bdusuario['datos'], "danger"];
         $this->vista->cargarvista('sesion');
       }
-    } else {
-      $this->vista->cargarvista('sesion');
     }
   }
 
   function end()
   {
-
-    UserSession::sessionClose();
+    if (UserSession::existCurrentUser()) {
+      UserSession::sessionClose();
+    }
     header("location:" . URL);
   }
-
   //---End Sesion 
 
+  //---Perfil
+
+  public function perfil($id = ["my"])
+  {
+    if (isset($_POST['submit'])) {
+
+      $UpUsuario = [
+        'id'         => UserSession::getCurrentUserID(),
+        'nombre'     => $_POST['nombre'],
+        'apellidos'  => $_POST['apellidos'],
+        'email'      => $_POST['email'],
+        'telefono'   => $_POST['telefono'],
+        'direccion'  => $_POST['direccion'],
+        'password'   => sha1($_POST['password']),
+      ];
+
+      //si se desea cambiar la contraseña
+      if ($_POST['pass'] != "") {
+        $UpUsuario['pass'] = sha1($_POST['pass']);
+        $UpUsuario['passConfirm'] = sha1($_POST['passConfirm']);
+        $resultado = $this->modelo->update($UpUsuario);
+      } else {
+        $resultado = $this->modelo->updateSinPass($UpUsuario);
+      }
+      $usuario = $this->modelo->getById(UserSession::getCurrentUserID());
+      $this->vista->datos = $usuario["datos"];
+      if ($resultado["correcto"]) {
+        UserSession::setCurrentUser($usuario["datos"]['0']);
+        $this->vista->mensaje = ["Cambio realizado correctamente", "success"];
+      } else {
+        $this->vista->mensaje = [$resultado["mensaje"], "danger"];
+      }
+      $this->vista->cargarvista('perfil');
+    } else {
+
+      if ($id[0] == "my") {
+        $resultado = $this->modelo->getById(UserSession::getCurrentUserID());
+        $this->vista->datos = $resultado["datos"];
+        $this->vista->cargarvista('perfil');
+        // } elseif (UserSession::getCurrentUserAdmin()) { //Si queremos que el admin edite perfiles de otros usuarios
+
+        //   $this->vista->cargarvista('perfilotros');
+      } else {
+        header("location: " . URL . "usuarios/perfil/my");
+      }
+    }
+  }
+
+  public function foto()
+  {
+  }
+
+  //---End Perfil
+
+  //---Comunes
+
+  public function mostrar()
+  { 
+    $resultados = $this->modelo->getAll();
+    $this->vista->datos = $resultados["datos"];
+    $this->vista->cargarvista('usuarios');
+  }
 }

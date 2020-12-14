@@ -1,37 +1,34 @@
-<?php 
+<?php
 
 class usuariosModel extends Model
 {
-  
+
   function __construct()
   {
     parent::__construct();
     $this->table = "users";
   }
 
-  public function select()
-  {
-
-    try {
-      $sql = "SELECT * FROM $this->table";
-
-      $query = $this->db->getConnection()->prepare($sql);
-      $query->execute();
-
-      $resultado["datos"] = $query->fetchAll(PDO::FETCH_ASSOC);
-      $resultado["correcto"] = true;
-
-    } catch (PDOException $ex) {
-      $resultado["datos"] = $ex->getMessage();
-      $resultado["correcto"] = false;
-
-    } finally {
-      return $resultado;
-    }
-  }
-
+  /**
+   * Registro de nuevo usuario
+   *
+   * @param Array $a
+   * @return Array
+   *
+   * ["correcto"] → true si se recuperaron bien los datos
+   * 
+   * ["datos"]    → Array con los registros de la tabla
+   * 
+   * ["mensaje"]  → mensaje de error o de realizacion correcta
+   */
   public function insert($a)
   {
+
+    $resultado = [
+      "correcto" => false,
+      "mensaje"  => "",
+      "datos"    => "",
+    ];
 
     try {
       $sql = "INSERT INTO `users`(`id`, `nif`, `name`, `surnames`, `image`, `login`, `password`, `email`, `phone`, `address`, `rol_id`,`accepted`)
@@ -48,81 +45,141 @@ class usuariosModel extends Model
         ':phone' => $a["telefono"],
         ':address' => $a["direccion"],
         ':rol_id' => 0,
-        ':accepted' => 1,
+        ':accepted' => 0,
       ]);
 
       $resultado["correcto"] = true;
-
     } catch (PDOException $ex) {
-      $resultado["datos"] = $ex->getMessage();
+      $resultado["mensaje"] = $ex->getMessage();
       $resultado["correcto"] = false;
-
     } finally {
       return $resultado;
     }
   }
 
-public function update($a)
-{
-
-    try {
-      $sql = "UPDATE $this->table SET 'nif' = :nif, 'name' = :nombre, 'surname' = :apellido, 'image' = :imagen, 'login' = :nick, 
-                          'password' = :contrasena, 'email' = :email, 'phone' = :telefono, 'address' = :direccion. 'rol_id' = :rol
-              WHERE $this->table.'id' = :id";
-
-      $query = $this->db->getConnection()->prepare($sql);
-      $query->execute([
-        ':nif' => $a,
-        ':nombre' => $a,
-        ':apellido' => $a,
-        ':imagen' => $a,
-        ':nick' => $a,
-        ':contrasena' => $a,
-        ':email' => $a,
-        ':telefono' => $a,
-        ':direccion' => $a,
-        ':rol' => $a,
-        ':id' => $a,
-      ]);
-
-      $resultado["correcto"] = true;
-
-    } catch (PDOException $ex) {
-      $resultado["datos"] = $ex->getMessage();
-      $resultado["correcto"] = false;
-
-    } finally {
-      return $resultado;
-    }
-}
-
-public function delete($a)
-{
-
-    try {
-      $sql = "DELETE from $this->table where id = :id";
-
-      $query = $this->db->getConnection()->prepare($sql);
-      $query->execute([
-        ':id' => $a
-      ]);
-
-      $resultado["correcto"] = true;
-
-    } catch (PDOException $ex) {
-      $resultado["datos"] = $ex->getMessage();
-      $resultado["correcto"] = false;
-
-    } finally {
-      return $resultado;
-    }
-}
-
-public function iniciar($usuario, $contraseña)
+  /**
+   * Editar un usuario
+   *
+   * @param Array $a
+   * @return Array
+   * 
+   * ["correcto"] → true si se recuperaron bien los datos
+   * 
+   * ["datos"]    → Array con los registros de la tabla
+   * 
+   * ["mensaje"]  → mensaje de error o de realizacion correcta
+   */
+  public function update($a)
   {
+    $resultado = [
+      "correcto" => false,
+      "mensaje"  => "",
+      "datos"    => "",
+    ];
+
     try {
-      $resultado["correcto"]=false;
-      $resultado["datos"]=null;
+      if (UserSession::checkPassword($a['password'])) {
+
+        if ($a['pass'] != $a['passConfirm']) {
+          throw new PDOException("Contraseñas nuevas no coincidentes");
+        }
+        $sql = "UPDATE $this->table SET `name` = :nombre, `surnames` = :apellido, `password` = :contrasena, `email` = :email, `phone` = :telefono, `address` = :direccion
+              WHERE `id` = :id";
+
+        $query = $this->db->getConnection()->prepare($sql);
+        $query->execute([
+          ':nombre' => $a['nombre'],
+          ':apellido' => $a['apellidos'],
+          ':contrasena' => $a['pass'],
+          ':email' => $a['email'],
+          ':telefono' => $a['telefono'],
+          ':direccion' => $a['direccion'],
+          ':id' => $a['id'],
+        ]);
+
+        $resultado["correcto"] = true;
+      } else {
+        throw new PDOException("Contraseña actual no correcta");
+      }
+    } catch (PDOException $ex) {
+      $resultado["mensaje"] = $ex->getMessage();
+      $resultado["correcto"] = false;
+    } finally {
+      return $resultado;
+    }
+  }
+
+  /**
+   * Realiza cambios en el perfil del usuario sin cambiar su contraseña
+   *
+   * @param Array $a
+   * @return Array
+   * 
+   *  ["correcto"] → true si se recuperaron bien los datos
+   * 
+   * ["datos"]    → Array con los registros de la tabla
+   * 
+   * ["mensaje"]  → mensaje de error o de realizacion correcta
+   */
+  public function updateSinPass($a)
+  {
+    $resultado = [
+      "correcto" => false,
+      "mensaje"  => "",
+      "datos"    => "",
+    ];
+
+    try {
+      if (UserSession::checkPassword($a['password'])) {
+
+        $sql = "UPDATE $this->table SET `name` = :nombre, `surnames` = :apellido, `email` = :email, `phone` = :telefono, `address` = :direccion
+              WHERE `id` = :id";
+
+        $query = $this->db->getConnection()->prepare($sql);
+        $query->execute([
+          ':nombre' => $a['nombre'],
+          ':apellido' => $a['apellidos'],
+          ':email' => $a['email'],
+          ':telefono' => $a['telefono'],
+          ':direccion' => $a['direccion'],
+          ':id' => $a['id'],
+        ]);
+
+        $resultado["correcto"] = true;
+      } else {
+        throw new PDOException("Contraseña actual no correcta");
+      }
+    } catch (PDOException $ex) {
+      $resultado["mensaje"] = $ex->getMessage();
+      $resultado["correcto"] = false;
+    } finally {
+      return $resultado;
+    }
+  }
+
+  /**
+   * Devuelve el usuario que coincida en usuario y contraseña
+   *
+   * @param String $usuario
+   * @param String $contraseña
+   * @return Array 
+   * 
+   * ["correcto"] → true si se recuperaron bien los datos
+   * 
+   * ["datos"]    → Array con los registros de la tabla
+   * 
+   * ["mensaje"]  → mensaje de error o de realizacion correcta
+   */
+  public function iniciar($usuario, $contraseña)
+  {
+
+    $resultado = [
+      "correcto" => false,
+      "mensaje"  => "",
+      "datos"    => "",
+    ];
+
+    try {
 
       $sql = "SELECT * from $this->table where `login`=:usuario and `password`=:pass";
       $query = $this->db->getConnection()->prepare($sql);
@@ -130,23 +187,23 @@ public function iniciar($usuario, $contraseña)
         'usuario' => $usuario,
         'pass' => $contraseña
       ]);
-      if ($query->rowCount()==1) {
+      if ($query->rowCount() == 1) {
+
         $resultado["datos"] = $query->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($resultado["datos"]['0']["accepted"]!=1) {
-          throw new PDOException("Usuario no activo, contacte con el Administrador");
-        }else {
+        if ($resultado["datos"]['0']["accepted"] == 1) {
           $resultado["correcto"] = true;
+        } else {
+          throw new PDOException("Usuario no activo, contacte con el Administrador");
         }
-      }else {
+      } else {
         throw new PDOException("Usuario o contraseña incorrectos");
       }
       return $resultado;
     } catch (PDOException $ex) {
-      $resultado["datos"] = $ex->getMessage();
+      $resultado["correcto"] = false;
+      $resultado["mensaje"] = $ex->getMessage();
       return $resultado;
     }
   }
-
 }
-?>

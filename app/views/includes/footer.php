@@ -17,23 +17,33 @@
         <div class="col-sm-3 col-md-2">
           <h6 class="title">Servicios</h6>
           <ul class="list-unstyled">
-            <li> <a href="#">Horario</a></li>
-            <li> <a href="#">¿Que actividades impartimos?</a></li>
+            <li> <a href="<?php echo(URL)?>horario">Horario</a></li>
+            <li> <a href="<?php echo(URL)?>actividades">Nuestras actividades</a></li>
           </ul>
         </div>
-        <div class="col-sm-3  col-md-2">
-          <h6 class="title">Unete a nosotros</h6>
-          <ul class="list-unstyled">
-            <li> <a href="#"> Registrate </a></li>
-            <li> <a href="#"> Inicia sesión </a></li>
-          </ul>
-        </div>
+        <?php if (UserSession::existCurrentUser()) {?>
+          <div class="col-sm-3  col-md-2">
+            <h6 class="title">Tu cuenta</h6>
+            <ul class="list-unstyled">
+              <li> <a href="<?php echo(URL)?>reservas/my<?php UserSession::getCurrentUserID()?>"> Mis incripciones </a></li>
+              <li> <a href="<?php echo(URL)?>mensajes/my<?php UserSession::getCurrentUserID()?>"> Mis mensajes </a></li>
+            </ul>
+          </div>
+        <?php }else { ?> 
+          <div class="col-sm-3  col-md-2">
+            <h6 class="title">Unete a nosotros</h6>
+            <ul class="list-unstyled">
+              <li> <a href="<?php echo(URL)?>usuarios/registro"> Registrate </a></li>
+              <li> <a href="<?php echo(URL)?>usuarios/login"> Inicia sesión </a></li>
+            </ul>
+          </div>
+        <?php } ?>
+          
         <div class="col-sm-3 col-md-2">
-          <h6 class="title">About</h6>
+          <h6 class="title">Desarrollo</h6>
           <ul class="list-unstyled">
-            <li> <a href="#">Documentacion</a></li>
-            <li> <a href="#">Repositorio</a></li>
-            <li> <a href="#">Rules and terms</a></li>
+            <li> <a href="<?php echo(URL)?>docs/documentacion">Documentación</a></li>
+            <li> <a href="https://github.com/jflorido94/gymvirtual">Repositorio</a></li>
           </ul>
         </div>
       </div> <!-- row.// -->
