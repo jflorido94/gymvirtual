@@ -89,6 +89,9 @@ abstract class Model
       ]);
 
       $resultado["datos"] = $query->fetchAll(PDO::FETCH_ASSOC);
+      if ($resultado["datos"]==[]) {
+        throw new PDOException("No encontrado");
+      }
       $resultado["correcto"] = true;
     } catch (PDOException $ex) {
       $resultado["mensaje"] = $ex->getMessage();

@@ -13,6 +13,8 @@ class actividadesModel extends Model
   public function insert($a)
   {
 
+    var_dump($a);
+
     $resultado = [
       "correcto" => false,
       "mensaje"  => "",
@@ -20,14 +22,14 @@ class actividadesModel extends Model
     ];
 
     try {
-      $sql = "INSERT INTO $this->table ( 'name', 'description', 'capacity') 
+      $sql = "INSERT INTO $this->table ( `name`, `description`, `capacity`) 
                              VALUES (:nombre, :descripcion, :capacidad)";
 
       $query = $this->db->getConnection()->prepare($sql);
       $query->execute([
-        ':nombre' => $a,
-        ':descripcion' => $a,
-        ':capacidad' => $a,
+        ':nombre' => $a['name'],
+        ':descripcion' => $a['description'],
+        ':capacidad' => $a['capacity'],
       ]);
 
       $resultado["correcto"] = true;
@@ -42,6 +44,8 @@ class actividadesModel extends Model
   public function update($a)
   {
 
+    var_dump($a);
+
     $resultado = [
       "correcto" => false,
       "mensaje"  => "",
@@ -49,15 +53,15 @@ class actividadesModel extends Model
     ];
 
     try {
-      $sql = "UPDATE $this->table SET 'name' = :nombre, 'description' = :descripcion, 'capacity' = :capacidad 
-              WHERE $this->table.'id' = :id";
+      $sql = "UPDATE $this->table SET `name` = :nombre, `description` = :descripcion, `capacity` = :capacidad 
+              WHERE $this->table.`id` = :id";
 
       $query = $this->db->getConnection()->prepare($sql);
       $query->execute([
-        ':nombre' => $a,
-        ':descripcion' => $a,
-        ':capacidad' => $a,
-        ':id' => $a
+        ':nombre' => $a['name'],
+        ':descripcion' => $a['description'],
+        ':capacidad' => $a['capacity'],
+        ':id' => $a['id'],
       ]);
 
       $resultado["correcto"] = true;
