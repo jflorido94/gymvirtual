@@ -10,7 +10,11 @@ class vista
    * @var array
    */
   public $mensaje = ["",""];
-
+ /**
+  * Datos de class vista
+  *
+  * @var string
+  */
   public $datos = "";
 
   function __construct()

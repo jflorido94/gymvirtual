@@ -62,7 +62,7 @@ abstract class Model
   /**
    * Devuelve el registro correspondiente al Id pasado por parametro
    *
-   * @param String $id
+   * @param Array $param
    * @return Array 
    * ["correcto"] → true si se recuperaron bien los datos
    * 
@@ -71,7 +71,7 @@ abstract class Model
    * ["mensaje"]  → mensaje de error o de realizacion correcta
    * 
    */
-  public function getById($id)
+  public function getById($param)
   {
 
     $resultado = [
@@ -85,7 +85,7 @@ abstract class Model
 
       $query = $this->db->getConnection()->prepare($sql);
       $query->execute([
-        ':id' => $id
+        ':id' => $param['0']
       ]);
 
       $resultado["datos"] = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -112,7 +112,7 @@ abstract class Model
    * ["mensaje"]  → mensaje de error o de realizacion correcta
    * 
    */
-  public function delete($id)
+  public function delete($param)
   {
 
     $resultado = [
@@ -126,7 +126,7 @@ abstract class Model
 
       $query = $this->db->getConnection()->prepare($sql);
       $query->execute([
-        ':id' => $id
+        ':id' => $param['0']
       ]);
       $resultado["mensaje"] = "Registro borrado correctamente";
       $resultado["correcto"] = true;

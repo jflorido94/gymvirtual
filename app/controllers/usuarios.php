@@ -137,10 +137,71 @@ class usuarios extends controlador
 
   //---End Perfil
 
+  //--- Usuarios
+
+  public function chat($id)
+  {
+    if ($id != UserSession::getCurrentUserID()) {
+      $resultado = $this->modelo->getchat($id);
+
+      $this->vista->referencia = $id;
+      $this->vista->datos = $resultado["datos"];
+      $this->vista->cargarvista("chat");
+    } else {
+      header("location: " . URL . "usuarios");
+    }
+  }
+
+  public function sendmessage($id)
+  {
+    if ($id != UserSession::getCurrentUserID()) {
+      if (isset($_POST['submit'])) {
+
+        $UpMessage = [
+          'emisor'         => UserSession::getCurrentUserID(),
+          'message'     => $_POST['message'],
+          'receptor'  => $id['0'],
+        ];
+
+        $this->modelo->mensajear($UpMessage);
+      }
+      header("location: " . URL . "usuarios/chat/". $id['0']);
+    }
+  }
+  public function admin($id)
+  {
+    if ($id != UserSession::getCurrentUserID()) {
+
+      $this->modelo->admin($id);
+    }
+
+    header("location: " . URL . "usuarios");
+  }
+
+  public function activar($id)
+  {
+    if ($id != UserSession::getCurrentUserID()) {
+
+      $this->modelo->activar($id);
+    }
+
+    header("location: " . URL . "usuarios");
+  }
+
+  public function borrar($id)
+  {
+    if ($id != UserSession::getCurrentUserID()) {
+      $this->modelo->delete($id);
+    }
+    header("location: " . URL . "usuarios");
+  }
+
+  //--- End Usuarios 
+
   //---Comunes
 
   public function mostrar()
-  { 
+  {
     $resultados = $this->modelo->getAll();
     $this->vista->datos = $resultados["datos"];
     $this->vista->cargarvista('usuarios');

@@ -206,4 +206,146 @@ class usuariosModel extends Model
       return $resultado;
     }
   }
+
+  public function admin($param)
+  {
+    try {
+      // $resultado = [];
+      // $resultado["correcto"]=false;
+      // $resultado["datos"]=null;
+
+      //buscamos todos los campos del profesor
+
+      $user = $this->getById([$param['0']])['datos'];
+
+      $sql = "UPDATE $this->table SET rol_id = :admin WHERE id = :id ";
+      $query = $this->db->getConnection()->prepare($sql);
+      if ($user['0']['rol_id'] == 1) {
+        $query->execute([
+          'id'   => $user['0']['id'],
+          'admin'   => 0
+        ]);
+      } else {
+        $query->execute([
+          'id'   => $user['0']['id'],
+          'admin'   => 1
+        ]);
+      }
+      return true;
+    } catch (PDOException $ex) {
+      // $resultado["correcto"]=false;
+      // $resultado["datos"] = $ex->getMessage();
+      // return $resultado;
+      return $ex;
+    }
+  }
+
+  public function activar($param)
+  {
+    try {
+      // $resultado = [];
+      // $resultado["correcto"]=false;
+      // $resultado["datos"]=null;
+
+      //buscamos todos los campos del profesor
+
+      $user = $this->getById([$param['0']])['datos'];
+
+      $sql = "UPDATE $this->table SET accepted = :activar WHERE id = :id ";
+      $query = $this->db->getConnection()->prepare($sql);
+      if ($user['0']['accepted'] == 1) {
+        $query->execute([
+          'id'   => $user['0']['id'],
+          'activar'   => 0
+        ]);
+      } else {
+        $query->execute([
+          'id'   => $user['0']['id'],
+          'activar'   => 1
+        ]);
+      }
+      return true;
+    } catch (PDOException $ex) {
+      // $resultado["correcto"]=false;
+      // $resultado["datos"] = $ex->getMessage();
+      // return $resultado;
+      return $ex;
+    }
+  }
+
+  public function getchat($param)
+  {
+    try {
+      // $resultado = [];
+      // $resultado["correcto"]=false;
+      // $resultado["datos"]=null;
+
+      //buscamos todos los campos del profesor
+      $resultado = [
+        "correcto" => false,
+        "mensaje"  => "",
+        "datos"    => "",
+      ];
+  
+      try {
+      $sql = "SELECT ms.*, de.login as enviador,para.login as recibidor  
+      FROM messages ms 
+      LEFT JOIN users de 
+      ON ms.from_users_id= de.id
+      LEFT JOIN users para 
+      ON ms.to_users_id= para.id
+      WHERE para.id = :actual AND de.id = :usuario
+      OR para.id = :usuario AND de.id = :actual";
+      $query = $this->db->getConnection()->prepare($sql);
+
+      $query->execute([
+        'usuario'   => $param['0'],
+        'actual'   => UserSession::getCurrentUserID()
+      ]);
+
+      $resultado["datos"] = $query->fetchAll(PDO::FETCH_ASSOC);
+      $resultado["correcto"] = true;
+    } catch (PDOException $ex) {
+      $resultado["mensaje"] = $ex->getMessage();
+      $resultado["correcto"] = false;
+    } finally {
+      return $resultado;
+    }
+    } catch (PDOException $ex) {
+      // $resultado["correcto"]=false;
+      // $resultado["datos"] = $ex->getMessage();
+      // return $resultado;
+      return $ex;
+    }
+  }
+
+  public function mensajear($a)
+  {
+
+    $resultado = [
+      "correcto" => false,
+      "mensaje"  => "",
+      "datos"    => "",
+    ];
+
+    try {
+      $sql = "INSERT INTO `messages`( `id`,`from_users_id`, `message`, `to_users_id`)
+                         VALUES (NULL,:de,:mensaje,:para)";
+
+      $query = $this->db->getConnection()->prepare($sql);
+      $query->execute([
+        ':de' => $a["emisor"],
+        ':mensaje' => $a["message"],
+        ':para' => $a["receptor"],
+      ]);
+
+      $resultado["correcto"] = true;
+    } catch (PDOException $ex) {
+      $resultado["mensaje"] = $ex->getMessage();
+      $resultado["correcto"] = false;
+    } finally {
+      return $resultado;
+    }
+  }
+
 }

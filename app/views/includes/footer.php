@@ -26,7 +26,6 @@
             <h6 class="title">Tu cuenta</h6>
             <ul class="list-unstyled">
               <li> <a href="<?php echo(URL)?>reservas/my<?php UserSession::getCurrentUserID()?>"> Mis incripciones </a></li>
-              <li> <a href="<?php echo(URL)?>mensajes/my<?php UserSession::getCurrentUserID()?>"> Mis mensajes </a></li>
             </ul>
           </div>
         <?php }else { ?> 
