@@ -1,6 +1,6 @@
 <?php
 
-class calendarioModel extends Model
+class horarioModel extends Model
 {
 
   function __construct()
@@ -9,7 +9,12 @@ class calendarioModel extends Model
     $this->table = "calendar";
   }
 
-
+/**
+ * Pendiente de programar
+ *
+ * @param [type] $a
+ * @return void
+ */
   public function insert($a)
   {
 
@@ -43,7 +48,12 @@ class calendarioModel extends Model
       return $resultado;
     }
   }
-
+/**
+ * Pendiente de programar
+ *
+ * @param [type] $a
+ * @return void
+ */
   public function update($a)
   {
 

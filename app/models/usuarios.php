@@ -65,8 +65,6 @@ class usuariosModel extends Model
    * 
    * ["correcto"] → true si se recuperaron bien los datos
    * 
-   * ["datos"]    → Array con los registros de la tabla
-   * 
    * ["mensaje"]  → mensaje de error o de realizacion correcta
    */
   public function update($a)
@@ -115,9 +113,7 @@ class usuariosModel extends Model
    * @param Array $a
    * @return Array
    * 
-   *  ["correcto"] → true si se recuperaron bien los datos
-   * 
-   * ["datos"]    → Array con los registros de la tabla
+   * ["correcto"] → true si se recuperaron bien los datos
    * 
    * ["mensaje"]  → mensaje de error o de realizacion correcta
    */
@@ -166,7 +162,8 @@ class usuariosModel extends Model
    * 
    * ["correcto"] → true si se recuperaron bien los datos
    * 
-   * ["datos"]    → Array con los registros de la tabla
+   * ["datos"]    → Array con los usuarios que coincidad, deberia ser 
+   * solo uno ya que usuario es una clave unica
    * 
    * ["mensaje"]  → mensaje de error o de realizacion correcta
    */
@@ -207,6 +204,15 @@ class usuariosModel extends Model
     }
   }
 
+  /**
+   * Cambia de Admin a no Admin a otros usuarios
+   *
+   * @param Array $param
+   * @return Array
+   * 
+   * ["correcto"] → true si se realizo todo bien
+   * 
+   */
   public function admin($param)
   {
     try {
@@ -240,6 +246,15 @@ class usuariosModel extends Model
     }
   }
 
+  /**
+   * Activamos/desactivamos la cuenta de un usuario
+   *
+   * @param Array $param
+   * @return Array
+   * 
+   * ["correcto"] → true si se realizo todo bien
+   * 
+   */
   public function activar($param)
   {
     try {
@@ -273,6 +288,18 @@ class usuariosModel extends Model
     }
   }
 
+  /**
+   * Obtiene los nombres y todos los campos del chat entre el usuario actual y el pasado por parametros
+   *
+   * @param Array $param
+   * @return Array
+   * 
+   * ["correcto"] → true si se recuperaron bien los datos
+   * 
+   * ["datos"]    → Array con los nombres y los mensajes entre ambos usuarios
+   * 
+   * ["mensaje"]  → mensaje de error o de realizacion correcta
+   */
   public function getchat($param)
   {
     try {
@@ -319,6 +346,16 @@ class usuariosModel extends Model
     }
   }
 
+  /**
+   * Añade un mensaje pasado por POST a la tabla chat del usuario actual hacia el usuario pasado por parametros.
+   *
+   * @param Array $a
+   * @return Array
+   * 
+   * ["correcto"] → true si se realizo bien la operacion
+   * 
+   * ["mensaje"]  → mensaje de error o de realizacion correcta
+   */
   public function mensajear($a)
   {
 

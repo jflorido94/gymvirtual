@@ -9,7 +9,12 @@ class reservasModel extends Model
     $this->table = "bookings";
   }
 
-
+/**
+ * Pendiente de programar
+ *
+ * @param [type] $a
+ * @return void
+ */
   public function insert($a)
   {
 
@@ -39,7 +44,12 @@ class reservasModel extends Model
       return $resultado;
     }
   }
-
+/**
+ * Pendiente de programar
+ *
+ * @param [type] $a
+ * @return void
+ */
   public function update($a)
   {
 
@@ -71,4 +81,5 @@ class reservasModel extends Model
       return $resultado;
     }
   }
+
 }
